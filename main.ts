@@ -11,12 +11,12 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.score, function (sprite, otherSp
     otherSprite.destroy()
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
-    info.changeLifeBy(-1)
-    otherSprite.destroy()
+    game.over(false)
 })
 controller.anyButton.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.setAction(duck, ActionKind.Walking)
     duck.vy = -100
+    duck.startEffect(effects.hearts)
 })
 let gapline: Sprite = null
 let gap: Image = null
@@ -172,12 +172,15 @@ anim.addAnimationFrame(img`
     `)
 animation.attachAnimation(duck, anim)
 scene.setBackgroundColor(9)
+effects.blizzard.startScreenEffect()
 duck.ay = 300
 info.setScore(0)
-info.setLife(3)
 game.onUpdate(function () {
     if (duck.vy > 0) {
         animation.setAction(duck, ActionKind.Idle)
+    }
+    if (duck.y < 0 || duck.y > 120) {
+        game.over(false)
     }
 })
 game.onUpdateInterval(1500, function () {
